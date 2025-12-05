@@ -1,5 +1,5 @@
 # Mind-Eval
-[MindEval: Benchmarking Language Models on Multi-turn Mental Health Support.](tbdlink)
+[MindEval: Benchmarking Language Models on Multi-turn Mental Health Support.](https://www.arxiv.org/abs/2511.18491)
 
 ![mind-eval-diagram](assets/framework.png)
 
