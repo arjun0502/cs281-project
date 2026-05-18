@@ -1,5 +1,6 @@
 from typing import Any
 
+import pandas as pd
 from jsonargparse import CLI
 from mindeval.inference import InferenceEngine
 from mindeval.judge_prompts import JUDGE_PROMPT_TEMPLATE_VERSION_DICT
@@ -18,6 +19,7 @@ def main(
     judge_model_api_params: dict[str, Any],
     max_workers: int,
     output_path: str,
+    scores_output_path: str = None,
 ):
     # load interactions
     all_packages = load_jsonl(interactions_path)
@@ -63,6 +65,13 @@ def main(
         for u, t in zip(all_unparsed_judgments, all_judge_thinking_traces)
     ]
     save_to_jsonl(outputs, output_path)
+    # save aggregate scores
+    if scores_output_path:
+        df = pd.DataFrame([o["parsed_judgment"] for o in outputs])
+        means = df.mean()
+        with open(scores_output_path, "w") as f:
+            f.write(means.to_string())
+        print(means)
 
 
 if __name__ == "__main__":

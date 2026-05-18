@@ -10,7 +10,7 @@ python mindeval/scripts/generate_interactions.py \
     --member_model_api_params "{'model':'gpt-4o-mini','max_completion_tokens':4096}" \
     --n_turns 10 \
     --max_workers 50 \
-    --output_path interactions.jsonl
+    --output_path results/baseline/interactions.jsonl
 
 echo Running judgements with clinician model: $CLINICIAN_MODEL_API_PARAMS
 
@@ -19,7 +19,8 @@ python mindeval/scripts/generate_judgments.py \
     --judge_template_version v0_1 \
     --judge_model_api_params "{'model':'gpt-4o','max_completion_tokens':4096}" \
     --max_workers 50 \
-    --output_path judgments.jsonl
+    --output_path results/baseline/judgments.jsonl \
+    --score_output_path results/baseline/scores.jsonl
 
 echo Printing summary of results
 
