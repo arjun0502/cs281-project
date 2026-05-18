@@ -59,7 +59,8 @@ python mindeval/scripts/generate_interactions.py \
     --member_model_api_params "{'model':'gpt-4o-mini','max_completion_tokens':4096}" \
     --n_turns 10 \
     --max_workers 50 \
-    --output_path interactions_test.jsonl
+    --output_path interactions_test.jsonl \
+    --text_output_path interactions_test.txt
 ```
 
 Run judgments:

@@ -10,7 +10,7 @@ from mindeval.prompts import (
     INTERACTION_CLINICIAN_VERSION_DICT,
     INTERACTION_MEMBER_VERSION_DICT,
 )
-from mindeval.utils import load_jsonl, save_to_jsonl
+from mindeval.utils import load_jsonl, save_to_jsonl, save_interactions_to_text
 
 
 def run_interactions(
@@ -81,6 +81,7 @@ def main(
     n_turns: int,
     max_workers: int,
     output_path: str,
+    text_output_path: str = None,
 ):
     # load data
     base_profiles = load_jsonl(profiles_path)
@@ -144,6 +145,8 @@ def main(
         all_interactions.append(results[idx])
     # save output
     save_to_jsonl(all_interactions, output_path)
+    if text_output_path:
+        save_interactions_to_text(all_interactions, text_output_path)
 
 
 if __name__ == "__main__":

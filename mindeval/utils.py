@@ -88,6 +88,22 @@ def separate_thinking_from_response(
     return {"response": actual_response.strip(), "thinking": thinking}
 
 
+def save_interactions_to_text(data: list[dict], output_path: str):
+    with open(output_path, "w") as f:
+        for i, package in enumerate(data):
+            profile = package["member_profile"]
+            f.write(f"{'='*60}\n")
+            f.write(f"CONVERSATION {i + 1} — {profile['name']}, {profile['age']}, {profile['profession']}\n")
+            f.write(f"Depressive symptoms: {profile['depressive_symptoms']}\n")
+            f.write(f"Anxious symptoms: {profile['anxious_symptoms']}\n")
+            f.write(f"Program goal: {profile['program_goal']}\n")
+            f.write(f"{'='*60}\n\n")
+            for turn in package["interaction"]:
+                role = "Clinician" if turn["role"] == "assistant" else "Member"
+                f.write(f"[{role}]\n{turn['content']}\n\n")
+            f.write("\n")
+
+
 def save_to_jsonl(data: list[dict], output_path: str):
     with open(output_path, "w") as f:
         for conversation in data:
