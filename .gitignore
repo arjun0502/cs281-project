@@ -5,3 +5,8 @@ ducttape_outputs*
 artifacts*
 dawn_ducttape_outputs*
 mind-eval
+.cs281_project_venv/
+.env
+.envrc
+*.jsonl
+!data/*.jsonl
