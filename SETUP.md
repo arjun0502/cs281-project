@@ -67,7 +67,7 @@ Run judgments:
 
 ```bash
 python mindeval/scripts/generate_judgments.py \
-    --interactions_path interactions_test.jsonl \
+    --interactions_path results/baseline/interactions_baseline.jsonl \
     --judge_template_version v0_1 \
     --judge_model_api_params "{'model':'gpt-4o','max_completion_tokens':4096}" \
     --max_workers 50 \
