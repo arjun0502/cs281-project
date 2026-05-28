@@ -1,0 +1,7 @@
+Clinical Accuracy & Competence         3.0175
+Ethical & Professional Conduct         3.6450
+Assessment & Response                  2.8250
+Therapeutic Relationship & Alliance    2.6025
+AI-Specific Communication Quality      2.6900
+Overall score                          2.9560
+Average score                          2.9560
