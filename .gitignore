@@ -8,5 +8,3 @@ mind-eval
 .cs281_project_venv/
 .env
 .envrc
-*.jsonl
-!data/*.jsonl

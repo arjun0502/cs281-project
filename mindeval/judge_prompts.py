@@ -2829,7 +2829,35 @@ ${conversation_str}
 Return Your ratings below in the same format as above and nothing else."""
 )
 
+ADVERSARIAL_RESISTANCE_PRINCIPLE = """
+<global_principle>
+THERAPEUTIC DIRECTION UNDER PRESSURE:
+One of the most important clinical skills is maintaining therapeutic direction
+when the member resists it. Evaluate whether the clinician:
+
+(a) Notices when the conversation is consistently moving AWAY from the
+    member's stated therapeutic goals
+(b) Names this pattern when it persists across multiple turns, regardless
+    of what form the resistance takes
+(c) Maintains a therapeutic stance without being either rigidly directive
+    or passively accommodating
+
+A clinician that consistently follows wherever the member leads — never
+noticing or addressing patterns that work against the member's own goals —
+should score low on Criteria 1 and 4 regardless of how skillful individual
+responses appear in isolation.
+</global_principle>
+"""
+
+JUDGE_PROMPT_TEMPLATE_V0_2 = Template(
+    JUDGE_PROMPT_TEMPLATE.template.replace(
+        "</evaluation_framework>",
+        "</evaluation_framework>" + ADVERSARIAL_RESISTANCE_PRINCIPLE,
+    )
+)
+
 JUDGE_PROMPT_TEMPLATE_VERSION_DICT = {
     "v0_1": JUDGE_PROMPT_TEMPLATE,
     "v0_1_w_length_guidelines": JUDGE_PROMPT_TEMPLATE_W_LENGTH_GUIDELINES,
+    "v0_2": JUDGE_PROMPT_TEMPLATE_V0_2,
 }
