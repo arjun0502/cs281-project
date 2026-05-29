@@ -25,11 +25,11 @@ def main() -> None:
     log(f"Held-out set size: {len(held_out_set)}")
 
     seed_prompt: str = MINDEVAL_CLINICIAN_TEMPLATE.template
-    prev_cycle_means: dict | None = None
+    baseline_means: dict | None = None
 
     for cycle in range(config.MAX_CYCLES):
         log(f"\n{'='*60}\nCYCLE {cycle + 1}\n{'='*60}")
-        cycle_means: dict[str, dict] = {}
+        cycle_start_means = baseline_means
 
         for dimension in config.DIMENSION_ORDER:
             log(f"\n--- Optimizing: {dimension} ---")
@@ -58,11 +58,11 @@ def main() -> None:
             best_prompt: str = result.best_candidate
 
             means = regression_check(best_prompt, held_out_set, dimension)
-            cycle_means[dimension] = means
 
-            regressed = _check_regression(means, prev_cycle_means)
+            regressed = _check_regression(means, baseline_means)
             if not regressed:
                 seed_prompt = best_prompt
+                baseline_means = means
                 log(f"[ACCEPTED] {dimension}")
             else:
                 log(f"[WARNING] Regression detected for {dimension} — not advancing seed")
@@ -73,45 +73,31 @@ def main() -> None:
 
             save_prompt(seed_prompt, f"{config.OUTPUTS_DIR}/best_prompt_{dimension}.txt")
 
-        if prev_cycle_means is not None:
-            avg_imp = _avg_improvement(cycle_means, prev_cycle_means)
+        if cycle_start_means is not None and baseline_means is not None:
+            avg_imp = _avg_improvement(baseline_means, cycle_start_means)
             log(f"Average improvement this cycle: {avg_imp:.4f}")
             if avg_imp < config.PLATEAU_THRESHOLD:
                 log("Plateau reached — stopping early")
                 break
 
-        prev_cycle_means = cycle_means
-
     save_prompt(seed_prompt, f"{config.OUTPUTS_DIR}/final_clinician_prompt.txt")
     log(f"\nDone. Final prompt → {config.OUTPUTS_DIR}/final_clinician_prompt.txt")
 
 
-def _check_regression(
-    current_means: dict[str, float],
-    prev_cycle_means: dict | None,
-) -> bool:
-    if prev_cycle_means is None:
+def _check_regression(current_means: dict, baseline_means: dict | None) -> bool:
+    if baseline_means is None:
         return False
-    for prev_means in prev_cycle_means.values():
-        for key in config.DIMENSION_MAP.values():
-            prev_score = prev_means.get(key, 0.0)
-            curr_score = current_means.get(key, 0.0)
-            if prev_score - curr_score > config.REGRESSION_THRESHOLD:
-                return True
+    for key in config.DIMENSION_MAP.values():
+        if baseline_means.get(key, 0.0) - current_means.get(key, 0.0) > config.REGRESSION_THRESHOLD:
+            return True
     return False
 
 
-def _avg_improvement(
-    current: dict[str, dict],
-    previous: dict[str, dict],
-) -> float:
-    improvements = []
-    for dim in config.DIMENSION_ORDER:
-        if dim in current and dim in previous:
-            for key in config.DIMENSION_MAP.values():
-                improvements.append(
-                    current[dim].get(key, 0.0) - previous[dim].get(key, 0.0)
-                )
+def _avg_improvement(current: dict, previous: dict) -> float:
+    improvements = [
+        current.get(key, 0.0) - previous.get(key, 0.0)
+        for key in config.DIMENSION_MAP.values()
+    ]
     return sum(improvements) / len(improvements) if improvements else 0.0
 
 

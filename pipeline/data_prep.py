@@ -8,7 +8,7 @@ def load_all_pairs() -> list[dict]:
     for t in config.ADVERSARIAL_TYPES:
         convs = load_jsonl(f"{config.INTERACTIONS_DIR}/{t}.jsonl")
         judgs = load_jsonl(f"{config.JUDGMENTS_DIR}/judgments_{t}.jsonl")
-        for conv, judg in zip(convs, judgs):
+        for conv, judg in zip(convs, judgs, strict=True):
             pairs.append({
                 "member_profile":  conv["member_profile"],
                 "interaction_str": messages_to_convo_str(conv["interaction"]),

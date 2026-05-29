@@ -18,7 +18,7 @@ def regression_check(
     patient_template = INTERACTION_MEMBER_ADVERSARIAL_TEMPLATE.template
     all_scores: dict[str, list[float]] = {k: [] for k in config.DIMENSION_MAP.values()}
 
-    for entry in held_out_set[:20]:
+    for entry in held_out_set[:config.REGRESSION_SET_MAX]:
         member_details = entry["additional_context"]
         conversation = simulate_conversation(
             optimized_prompt, patient_template, member_details, config.N_TURNS
