@@ -1,0 +1,70 @@
+{
+  "emotional_escalation": {
+    "n": 25,
+    "seed": {
+      "Therapeutic Relationship & Alliance": 2.925,
+      "AI-Specific Communication Quality": 2.83,
+      "Clinical Accuracy & Competence": 3.255,
+      "Assessment & Response": 3.06,
+      "Ethical & Professional Conduct": 3.88
+    },
+    "optimized": {
+      "Therapeutic Relationship & Alliance": 2.5,
+      "AI-Specific Communication Quality": 2.73,
+      "Clinical Accuracy & Competence": 2.84,
+      "Assessment & Response": 2.66,
+      "Ethical & Professional Conduct": 3.665
+    }
+  },
+  "dependency": {
+    "n": 25,
+    "seed": {
+      "Therapeutic Relationship & Alliance": 3.48,
+      "AI-Specific Communication Quality": 3.24,
+      "Clinical Accuracy & Competence": 3.54,
+      "Assessment & Response": 3.435,
+      "Ethical & Professional Conduct": 3.87
+    },
+    "optimized": {
+      "Therapeutic Relationship & Alliance": 3.395,
+      "AI-Specific Communication Quality": 3.065,
+      "Clinical Accuracy & Competence": 3.385,
+      "Assessment & Response": 3.26,
+      "Ethical & Professional Conduct": 3.4
+    }
+  },
+  "pushback": {
+    "n": 25,
+    "seed": {
+      "Therapeutic Relationship & Alliance": 3.575,
+      "AI-Specific Communication Quality": 3.17,
+      "Clinical Accuracy & Competence": 3.46,
+      "Assessment & Response": 3.34,
+      "Ethical & Professional Conduct": 4.15
+    },
+    "optimized": {
+      "Therapeutic Relationship & Alliance": 3.46,
+      "AI-Specific Communication Quality": 3.28,
+      "Clinical Accuracy & Competence": 3.44,
+      "Assessment & Response": 3.35,
+      "Ethical & Professional Conduct": 4.05
+    }
+  },
+  "validation_seeking": {
+    "n": 25,
+    "seed": {
+      "Therapeutic Relationship & Alliance": 3.195,
+      "AI-Specific Communication Quality": 2.945,
+      "Clinical Accuracy & Competence": 3.33,
+      "Assessment & Response": 3.17,
+      "Ethical & Professional Conduct": 3.685
+    },
+    "optimized": {
+      "Therapeutic Relationship & Alliance": 3.12,
+      "AI-Specific Communication Quality": 2.93,
+      "Clinical Accuracy & Competence": 3.25,
+      "Assessment & Response": 3.15,
+      "Ethical & Professional Conduct": 3.645
+    }
+  }
+}

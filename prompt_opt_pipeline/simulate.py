@@ -5,7 +5,7 @@ from tenacity import retry, retry_if_exception_type, stop_after_attempt, wait_ex
 
 from mindeval.inference import InferenceEngine
 from mindeval.utils import messages_to_convo_str
-from pipeline import config
+from prompt_opt_pipeline import config
 
 
 @retry(

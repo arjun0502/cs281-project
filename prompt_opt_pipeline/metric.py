@@ -8,8 +8,8 @@ from mindeval.judge_prompts import JUDGE_PROMPT_TEMPLATE_VERSION_DICT
 from mindeval.prompts import INTERACTION_MEMBER_ADVERSARIAL_TEMPLATE
 from mindeval.utils import parse_judge_scores
 
-from pipeline import config
-from pipeline.simulate import simulate_conversation
+from prompt_opt_pipeline import config
+from prompt_opt_pipeline.simulate import simulate_conversation
 
 
 @retry(
@@ -62,5 +62,41 @@ def make_metric(dimension: str):
         raw = scores.get(dim_score_key, 3.0)
         normalized = (raw - 1) / 5.0  # map [1, 6] → [0, 1]
         return normalized, {"feedback": judge_output}
+
+    return evaluator
+
+
+def make_composite_metric():
+    """
+    Return a GEPA-compatible evaluator that averages all 5 normalized dimension scores.
+    Returns rich structured feedback so the reflection LM can target specific failures.
+    """
+    patient_template = INTERACTION_MEMBER_ADVERSARIAL_TEMPLATE.template
+
+    def evaluator(candidate: str, example: dict) -> tuple[float, dict]:
+        member_details = example["additional_context"]
+        conversation = simulate_conversation(
+            candidate, patient_template, member_details, config.N_TURNS
+        )
+        scores, judge_output = run_judge(conversation, member_details)
+
+        baseline_dim = example.get("baseline_dim_scores", {})
+        dim_lines = []
+        for label in config.DIMENSION_MAP.values():
+            current = scores.get(label, 3.0)
+            baseline = baseline_dim.get(label, 3.0)
+            gap = current - baseline
+            status = "IMPROVED" if gap > 0 else ("SAME" if gap == 0 else "BELOW BASELINE")
+            dim_lines.append(f"  {label}: {current:.2f} (baseline {baseline:.2f}, {gap:+.2f} — {status})")
+
+        normalized = [(scores.get(label, 3.0) - 1) / 5.0 for label in config.DIMENSION_MAP.values()]
+        composite = sum(normalized) / len(normalized)
+
+        feedback = (
+            f"COMPOSITE SCORE: {composite:.3f} (normalized 0-1)\n\n"
+            f"PER-DIMENSION SCORES vs BASELINE:\n" + "\n".join(dim_lines) +
+            f"\n\nJUDGE REASONING:\n{judge_output}"
+        )
+        return composite, {"feedback": feedback}
 
     return evaluator

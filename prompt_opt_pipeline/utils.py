@@ -1,7 +1,7 @@
 import os
 from datetime import datetime
 
-from pipeline import config
+from prompt_opt_pipeline import config
 
 _LOG_PATH = os.path.join(config.OUTPUTS_DIR, "run_log.txt")
 

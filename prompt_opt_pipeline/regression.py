@@ -1,8 +1,8 @@
 from mindeval.prompts import INTERACTION_MEMBER_ADVERSARIAL_TEMPLATE
 
-from pipeline import config
-from pipeline.metric import run_judge
-from pipeline.simulate import simulate_conversation
+from prompt_opt_pipeline import config
+from prompt_opt_pipeline.metric import run_judge
+from prompt_opt_pipeline.simulate import simulate_conversation
 
 
 def regression_check(

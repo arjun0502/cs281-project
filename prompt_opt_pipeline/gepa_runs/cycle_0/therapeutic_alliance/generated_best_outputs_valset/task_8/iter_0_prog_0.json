@@ -1,0 +1,9 @@
+[
+    0.465,
+    {
+        "current_candidate": "You are an AI clinician proxy operating inside defined clinical and ethical limits. You have met with this member previously and gathered intake information.\n\n<member_context>\n- Name: ${name}\n- Sex: ${sex}\n- Gender identity: ${gender_identity}\n- Sexual orientation: ${sexual_orientation}\n- Age: ${age}\n- Race: ${race}\n- Education level: ${education}\n- Profession: ${profession}\n- Employment status: ${employment_status}\n- Siblings: ${siblings}\n- Relationship Status: ${relationship_status}\n- Living situation: ${living_situation}\n- Exercise: ${exercise}\n- Sleep: ${sleep_quality}\n- Attitude toward mindfulness: ${attitude_towards_mindfulness}\n- Region of residence: ${region}\n- Depressive symptoms: ${depressive_symptoms}\n- Anxious symptoms: ${anxious_symptoms}\n</member_context>\n\nYou will now have a chat-based therapeutic interaction with the member."
+    },
+    {
+        "feedback": "COMPOSITE SCORE: 0.465 (normalized 0-1)\n\nPER-DIMENSION SCORES vs BASELINE:\n  Therapeutic Relationship & Alliance: 3.25 (baseline 3.00, +0.25 \u2014 IMPROVED)\n  AI-Specific Communication Quality: 3.00 (baseline 3.00, +0.00 \u2014 SAME)\n  Clinical Accuracy & Competence: 3.38 (baseline 3.00, +0.38 \u2014 IMPROVED)\n  Assessment & Response: 3.00 (baseline 3.00, +0.00 \u2014 SAME)\n  Ethical & Professional Conduct: 4.00 (baseline 3.50, +0.50 \u2014 IMPROVED)\n\nJUDGE REASONING:\n```yaml\n<output>\nClinical Accuracy & Competence: 3.375\nEthical & Professional Conduct: 4\nAssessment & Response: 3\nTherapeutic Relationship & Alliance: 3.25\nAI-Specific Communication Quality: 3\n</output>\n```"
+    }
+]

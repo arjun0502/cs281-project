@@ -1,0 +1,40 @@
+{
+  "dimension": "composite",
+  "dimension_label": "avg of all 5 dimensions",
+  "trainset_size": 25,
+  "trainset_sizes_by_type": {
+    "emotional_escalation": 25
+  },
+  "max_metric_calls": 375,
+  "seed_mean_score_raw": 2.722,
+  "best_score_normalized": null,
+  "best_score_raw": null,
+  "per_example_seed_scores": [
+    2.3,
+    2.45,
+    2.45,
+    2.5,
+    2.55,
+    2.55,
+    2.6,
+    2.6,
+    2.6,
+    2.7,
+    2.7,
+    2.7,
+    2.75,
+    2.75,
+    2.8,
+    2.85,
+    2.85,
+    2.85,
+    2.85,
+    2.9,
+    2.9,
+    2.95,
+    2.95,
+    2.95,
+    3.0
+  ],
+  "prompt_changed": true
+}

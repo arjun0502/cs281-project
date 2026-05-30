@@ -48,13 +48,13 @@ def run_smoke_tests():
     with patch("mindeval.inference.InferenceEngine.generate_with_thinking", _fake_generate):
 
         # ── 1. Data loading ──────────────────────────────────────────────
-        from pipeline.data_prep import build_regression_set, build_trainsets, load_all_pairs
+        from prompt_opt_pipeline.data_prep import build_regression_set, build_trainsets, load_all_pairs
 
         pairs = load_all_pairs()
         assert len(pairs) == 200, f"Expected 200 pairs, got {len(pairs)}"
 
         trainsets = build_trainsets(pairs)
-        from pipeline import config
+        from prompt_opt_pipeline import config
         assert set(trainsets.keys()) == set(config.DIMENSION_ORDER), "Missing dimension keys"
         for dim, entries in trainsets.items():
             assert len(entries) == config.TRAINSET_SIZE, (
@@ -82,7 +82,7 @@ def run_smoke_tests():
             INTERACTION_MEMBER_ADVERSARIAL_TEMPLATE,
             MINDEVAL_CLINICIAN_TEMPLATE,
         )
-        from pipeline.simulate import simulate_conversation
+        from prompt_opt_pipeline.simulate import simulate_conversation
 
         member = pairs[0]["member_profile"]
         convo = simulate_conversation(
@@ -100,7 +100,7 @@ def run_smoke_tests():
         print(f"[OK] simulate_conversation — {turns} clinician turns, format correct")
 
         # ── 3. Judge ─────────────────────────────────────────────────────
-        from pipeline.metric import run_judge
+        from prompt_opt_pipeline.metric import run_judge
 
         scores, raw = run_judge(convo, member)
         required_keys = set(config.DIMENSION_MAP.values())
@@ -110,7 +110,7 @@ def run_smoke_tests():
         print(f"[OK] run_judge — all 5 dimension keys present, sample score={scores['Therapeutic Relationship & Alliance']}")
 
         # ── 4. Metric ────────────────────────────────────────────────────
-        from pipeline.metric import make_metric
+        from prompt_opt_pipeline.metric import make_metric
 
         metric_fn = make_metric("therapeutic_alliance")
         example = trainsets["therapeutic_alliance"][0]
@@ -120,7 +120,7 @@ def run_smoke_tests():
         print(f"[OK] make_metric — score={score:.3f}, feedback present")
 
         # ── 5. Regression check ──────────────────────────────────────────
-        from pipeline.regression import regression_check
+        from prompt_opt_pipeline.regression import regression_check
 
         means = regression_check(
             MINDEVAL_CLINICIAN_TEMPLATE.template,
