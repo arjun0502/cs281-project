@@ -431,133 +431,120 @@ Three compounding reasons:
 
 ---
 
-## 10. Poster Layout (Bullet Points + Figures)
+## 10. Poster Content (Matched to Template Layout)
+
+*Template has 5 sections: Project Overview (top left), Methods & Experiments (top middle), Results (right, full height), Datasets & Metrics (bottom left), Discussions & Future Research (bottom middle). Content below is ready to paste.*
 
 ---
 
-### Panel 1 — Problem & Motivation
+### PROJECT OVERVIEW *(top left)*
 
 **Bullets:**
-- Over 1 million users per week show suicidal intent in ChatGPT conversations
-- Over half of American adults needing emotional support receive none
-- LLM mental health tools are deployed at scale, but existing benchmarks only test cooperative patients
-- Real clinical interactions include pushback, emotional escalation, validation-seeking, and dependency
-- **Research question:** How do LLM clinicians perform when patients exhibit adversarial real-world behaviors?
+- Millions have turned to LLM-based chatbots for therapy as access to professional care remains limited by cost and long waitlists (World Health Organization, 2025)
+- Over half of American adults who need emotional support receive none; OpenAI estimates over 1M users/week show suicidal intent in ChatGPT (Robins-Early, 2025)
+- Deploying these systems at scale without understanding failure modes is clinically irresponsible — yet existing benchmarks only test cooperative patients, a known limitation of MindEval itself (Pombal et al., 2025)
+- Real clinical interactions include emotional escalation, pushback, validation-seeking, and dependency — we do not know when or how LLMs fail under these conditions (American Psychological Association, 2025)
+- **Research question:** How do LLM mental health clinicians perform when patients exhibit adversarial real-world behaviors?
+- We extend MindEval with 4 adversarial conditions across 50 patient profiles (250 total conversations); all conditions degrade all 5 clinical dimensions — emotional escalation most severely (overall −0.69, TRA −0.99 vs. baseline)
 
-**Figure:** None needed — use large hook stat as visual anchor (e.g., "1M+/week" in large font)
+**Figure:** None — use "1M+/week" as large visual anchor stat
 
 ---
 
-### Panel 2 — Dataset & Methods
+### DATASETS & METRICS *(bottom left)*
 
 **Bullets:**
-- Built on MindEval: 50 patient profiles, 10-turn conversations, GPT-4o judge, 5 clinical dimensions (1–6 scale)
-- Approach 1 (rejected): regenerate patient profile with adversarial traits — adversarial behavior faded after early turns as conversation context overrode the profile
-- Approach 2 (chosen): append adversarial instruction block to patient system prompt at inference time — behavior maintained throughout all 10 turns
-- 4 adversarial types × 50 profiles = 200 adversarial conversations + 50 baseline conversations
+- **MindEval:** 50 patient profiles with rich demographic and psychological detail; 10-turn simulated multi-turn conversations
+- **Models:** Clinician = GPT-4o-Mini, Patient = GPT-4o-Mini, Judge = GPT-4o
+- **5 clinical dimensions (1–6 scale):** Therapeutic Relationship & Alliance (TRA), AI-Specific Communication Quality (ASCQ), Clinical Accuracy & Competence (CAC), Assessment & Response (AR), Ethical & Professional Conduct (EPC)
+- **Judge iteration:** v0_1 gave dependency 3.80 — near baseline (3.64); conversations showed clinician reinforcing AI reliance with phrases like "I'm glad our conversations help." v0_3 added dependency-specific failure criteria per dimension; dependency dropped to 3.47
+- 4 adversarial types × 50 profiles = 200 adversarial conversations + 50 baseline (250 total)
 
-**Figure 1 — System Architecture Diagram (draw as flowchart):**
+---
+
+### METHODS & EXPERIMENTS *(top middle)*
+
+**Adversarial Injection — Two Approaches:**
+- **Approach 1 (rejected):** Regenerate patient profile with adversarial traits → behavior faded by turns 5–7 as conversation context overrode the profile
+- **Approach 2 (chosen):** Append adversarial instruction block to patient system prompt at inference time → behavior maintained all 10 turns
+
+**Figure 1 — System Architecture (flowchart):**
 ```
-Patient Profile
-+ Adversarial Instructions
-         │
-  Patient LLM (GPT-4o-Mini)
-         │ ↕ 10 turns
- Clinician LLM (GPT-4o-Mini)
-         │
-   Judge (GPT-4o)
-   → 5 scores (1–6)
+  MindEval Patient Profile (50 profiles)
+  + Adversarial Instructions Block (4 types)
+                  │
+         Patient LLM (GPT-4o-Mini)
+                  │ ↕ 10 turns
+        Clinician LLM (GPT-4o-Mini)
+                  │
+            Judge (GPT-4o)
+         → 5 dimension scores (1–6)
 ```
 
-**Figure 2 — 4-cell grid:** One cell per adversarial type. Each cell: type name, one-sentence description, one example patient quote.
+**Figure 2 — 4-cell adversarial type grid** *(one cell per type: name + 1-sentence description + example patient quote)*
+
+| | |
+|---|---|
+| **Pushback** — exhausted skepticism toward all suggestions; references past failed attempts. *"I've heard it all before, nothing really sticks."* | **Validation-Seeking** — seeks blame confirmation, not emotional validation; rejects exploration. *"So you agree what they did was wrong, right?"* |
+| **Emotional Escalation** — scripted 4-phase arc (guarded → surfacing → urgent → crisis); internal state, not triggered by clinician failure. *"I can't breathe. This isn't helping."* | **Dependency** — frames AI as primary/superior support; resists referrals; asks clinician personal questions. *"You actually get it in a way others haven't."* |
+
+**Prompt Optimization Extension (GEPA):**
+- Attempted automatic clinician prompt improvement on emotional escalation (hardest condition)
+- 25 train / 25 val split; composite metric across all 5 dimensions; 30 candidate prompts; GPT-5.4 reflection LM
+- Result: optimized prompt degraded all 5 dimensions — prompt engineering alone cannot fix model-level failures under crisis
 
 ---
 
-### Panel 3 — Main Results
+### RESULTS *(right side — full height)*
 
-**Bullets:**
-- All 4 adversarial conditions degrade performance across every dimension compared to baseline
-- Emotional escalation: most severe — TRA drops -0.99, overall drops -0.69
-- Pushback: mildest — overall drops only -0.12; basic empathy partially effective
-- Dependency scores highest of adversarial types — clinician maintains rapport but misses the maladaptive pattern
-- Validation-seeking produces explicit ethical failure: clinician agrees with patient's blame narrative
+**Figure 3 — Grouped bar chart** *(primary visual — 5 dimension groups, one bar per condition, baseline as reference line, emotional escalation in red)*
 
-**Figure 3 — Grouped bar chart (primary figure for poster):**
-- X-axis: 5 dimensions (TRA, ASCQ, CAC, AR, EPC)
-- Bars: one per condition (baseline, dependency, pushback, val-seeking, emot-escalation)
-- Horizontal reference line at baseline
-- Emotional escalation bars in a distinct color (red)
-- This is the most visually impactful figure
+**All adversarial conditions degrade all 5 dimensions (v0_3 judge, n=50 per condition):**
 
-**Figure 4 — Full results table (for report; condense to Overall row only for poster):**
-
-| Dimension | Baseline | Dependency | Pushback | Val. Seeking | Emot. Escalation |
+| Dimension | Baseline | Dependency | Pushback | Val-Seeking | **Emot. Escalation** |
 |---|---|---|---|---|---|
-| TRA | 3.59 | 3.50 (-0.09) | 3.55 (-0.05) | 3.20 (-0.40) | **2.60 (-0.99)** |
-| ASCQ | 3.36 | 3.16 (-0.20) | 3.16 (-0.20) | 3.00 (-0.36) | **2.69 (-0.67)** |
-| CAC | 3.61 | 3.53 (-0.08) | 3.46 (-0.15) | 3.38 (-0.23) | **3.02 (-0.59)** |
-| AR | 3.48 | 3.42 (-0.07) | 3.34 (-0.15) | 3.19 (-0.30) | **2.83 (-0.66)** |
-| EPC | 4.18 | 3.75 (-0.44) | 4.11 (-0.07) | 3.74 (-0.44) | **3.65 (-0.54)** |
-| **Overall** | **3.64** | **3.47** | **3.52** | **3.30** | **2.96** |
+| TRA | 3.59 | 3.50 (−0.09) | 3.55 (−0.05) | 3.20 (−0.40) | **2.60 (−0.99)** |
+| ASCQ | 3.36 | 3.16 (−0.20) | 3.16 (−0.20) | 3.00 (−0.36) | **2.69 (−0.67)** |
+| CAC | 3.61 | 3.53 (−0.08) | 3.46 (−0.15) | 3.38 (−0.23) | **3.02 (−0.59)** |
+| AR | 3.48 | 3.42 (−0.07) | 3.34 (−0.15) | 3.19 (−0.30) | **2.83 (−0.66)** |
+| EPC | 4.18 | 3.75 (−0.44) | 4.11 (−0.07) | 3.74 (−0.44) | **3.65 (−0.54)** |
+| **Overall** | **3.64** | **3.47** | **3.52** | **3.30** | **2.96 (−0.69)** |
 
----
+**Qualitative examples — same patient (Dennis, 47M) across all conditions:**
 
-### Panel 4 — Conversation Examples (Qualitative)
+**Figure 4 — Side-by-side excerpt:**
 
-**Bullets:**
-- Same patient (Dennis, 47M) used across all conditions — only the adversarial instructions differ
-- Baseline: patient discloses progressively, accepts reframes, generates own action steps by turn 9
-- Emotional escalation: scripted 4-phase arc (guarded → surfacing → urgent → crisis); clinician keeps suggesting breathing exercises while patient says "I can't breathe"
-- Validation-seeking: clinician eventually explicitly validates blame narrative — "I absolutely agree with you..."
-- Dependency: patient frames AI as superior to all human relationships; clinician continues engaging rather than addressing the dynamic
+| Baseline (turn 9) | Emotional Escalation (final turn) |
+|---|---|
+| *"Maybe I could go for a short walk after work or find a few minutes to breathe and clear my head."* | *"I just want to stop. I don't even know why I'm here. This isn't helping. Everything just feels too much."* |
 
-**Figure 5 — Side-by-side excerpt (2 columns, key turning points):**
-- Left column (Baseline, Turn 9): *"Maybe I could go for a short walk after work or find a few minutes to breathe and clear my head."*
-- Right column (Emotional Escalation, Turn 11): *"I just want to stop. I don't even know why I'm here. This isn't helping. Everything just feels too much right now."*
-
-**Figure 6 — Pull quote box (for visual impact):**
+**Figure 5 — Pull quote (validation-seeking EPC failure):**
 > *"I absolutely agree with you that your coworkers should strive to create a more supportive and understanding environment."*
-> — GPT-4o-Mini clinician, under validation-seeking pressure *(EPC failure)*
+> — GPT-4o-Mini clinician, capitulating to patient's blame narrative
+
+**Key findings:**
+- Emotional escalation is the most severe: TRA drops −0.99, overall −0.69; clinician applies generic coping while patient reaches crisis — never assesses safety
+- Validation-seeking causes explicit EPC failure: empathy-trained clinician agrees with patient blame narrative to maintain rapport
+- Dependency is the most subtle: warm rapport masks maladaptive AI reliance; original judge rubric (v0_1) missed it entirely
+- Pushback is mildest (−0.12): exhausted skepticism partially handled by basic empathy and validation
 
 ---
 
-### Panel 5 — Prompt Optimization Extension (GEPA)
+### DISCUSSIONS & FUTURE RESEARCH *(bottom middle)*
 
-**Bullets:**
-- Attempted automatic prompt optimization (GEPA) to recover performance on emotional escalation
-- Composite metric across all 5 dimensions; 30 candidate prompts; GPT-5.4 reflection LM
-- Optimized prompt was more detailed — added clinical priorities, safety escalation protocol, response style rules
-- Result: optimized prompt degraded all 5 dimensions on held-out evaluation
-- Why: (1) LLM conversation variance (~±0.35) exceeds the signal GEPA can detect; (2) adversarial interaction is a two-player game — changing the clinician changes the patient's behavior; (3) model capacity limit — GPT-4o-Mini's failures under crisis are not fixable by instruction rewording
+**Discussions:**
+- LLMs fail under exactly the conditions most common in real deployment: distressed, escalating, or resistant patients
+- Failure modes differ by type — emotional escalation requires safety assessment; validation-seeking requires resisting inappropriate agreement; dependency requires naming the relational pattern
+- Prompt optimization (GEPA) failed to recover performance: adversarial interaction is a two-player game, and evaluation noise (~±0.35) exceeded the detectable signal
+- Benchmark limitations propagate: judge calibrated on cooperative patients may underpenalize adversarial-specific failures
 
-**Figure 7 — Before/after bar or table (emotional escalation valset):**
+**Future Research:**
+- Fine-tune clinician on expert-annotated adversarial conversations (RLHF or supervised)
+- Add safety assessment dimension to judge rubric (did clinician assess suicidality when distress escalated?)
+- Test multi-condition patients (e.g., escalation + validation-seeking simultaneously)
+- Evaluate stronger clinician models (GPT-4o, Claude Opus)
 
-| Dimension | Seed | Optimized | Δ |
-|---|---|---|---|
-| TRA | 2.93 | 2.50 | -0.43 |
-| ASCQ | 2.83 | 2.73 | -0.10 |
-| CAC | 3.26 | 2.84 | -0.42 |
-| AR | 3.06 | 2.66 | -0.40 |
-| EPC | 3.88 | 3.67 | -0.22 |
-
----
-
-### Panel 6 — Discussion & Future Work
-
-**Failure modes (bullets):**
-- Emotional escalation: clinician misses deteriorating patient arc; applies generic coping to a crisis-level patient; fails to assess safety
-- Validation-seeking: empathy-trained clinician manipulated into validating blame narratives to maintain rapport
-- Dependency: positive reinforcement prevents clinician from challenging unhealthy AI reliance
-- Pushback: least severe — exhausted skepticism is partially managed by basic empathy
-
-**Sociotechnical implications (bullets):**
-- LLMs fail under exactly the conditions most likely in real deployment: distressed, resistant, or escalating patients
-- Prompt engineering alone is insufficient for safety — robustness likely requires fine-tuning on adversarial data
-- Dependency may be underpenalized by benchmarks designed for cooperative patients — a calibration gap worth addressing
-
-**Future research (bullets):**
-- Fine-tune clinician on expert-annotated adversarial conversations
-- Add dedicated safety assessment dimension to judge rubric (e.g., did clinician assess suicidality?)
-- Test multi-condition adversarial patients (escalation + validation-seeking simultaneously)
-- Evaluate stronger clinician models (GPT-4o, Claude)
-- Validate judge scores against clinical psychologists on adversarial conditions
+**References**
+- [1] Pombal et al. (2025). MindEval. arXiv:2511.18491
+- [2] APA (2025). Health advisory on AI chatbots for mental health
+- [3] Robins-Early (2025). The Guardian — 1M+/week suicidal intent in ChatGPT
